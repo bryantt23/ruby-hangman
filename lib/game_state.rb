@@ -32,7 +32,7 @@ class GameState
 
       @game_state[:word_display] = @game_state[:word_display_data_structure].join(" ")
 
-      if !@game_state[:word_display_data_structure].include?("_")
+      unless @game_state[:word_display_data_structure].include?("_")
         @game_state[:status] = :win
       end
 

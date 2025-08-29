@@ -40,9 +40,15 @@ RSpec.describe GameState do
       expect(snapshot[:word_display]).to eq("_ _ _ _")
     end
 
-    xit "returns :duplicate when the same letter is guessed again" do
+    xit "returns :duplicate when the same correct letter is guessed again" do
       @state.guess_letter("t")
       result = @state.guess_letter("t")
+      expect(result).to eq(:duplicate)
+    end
+
+    xit "returns :duplicate when the same incorrect letter is guessed again" do
+      @state.guess_letter("x")
+      result = @state.guess_letter("x")
       expect(result).to eq(:duplicate)
     end
 

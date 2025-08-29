@@ -1,0 +1,31 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            // for scripts WITHOUT a Gemfile
+            "type": "rdbg",
+            "name": "Debug current file (no bundler)",
+            "request": "launch",
+            "script": "${file}",
+            "useBundler": false,
+            "askParameters": false,
+            "useTerminal": true
+        },
+        {
+            // for projects WITH a Gemfile
+            "type": "rdbg",
+            "name": "Debug current file (with bundler)",
+            "request": "launch",
+            "script": "${file}",
+            "useBundler": true,
+            "askParameters": false,
+            "useTerminal": true
+        },
+        {
+            // fallback: start rdbg yourself, then attach
+            "type": "rdbg",
+            "name": "Attach to running rdbg",
+            "request": "attach"
+        }
+    ]
+}

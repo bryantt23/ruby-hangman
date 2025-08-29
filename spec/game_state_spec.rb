@@ -7,6 +7,7 @@ RSpec.describe GameState do
       snapshot = state.get_game_state
 
       expect(snapshot[:word]).to eq("test")
+      expect(snapshot[:word_display]).to eq("_ _ _ _")
       expect(snapshot[:remaining_guesses]).to eq(6)
       expect(snapshot[:correct_guesses]).to eq([])
       expect(snapshot[:incorrect_guesses]).to eq([])
@@ -27,6 +28,7 @@ RSpec.describe GameState do
       snapshot = @state.get_game_state
       expect(snapshot[:correct_guesses]).to include("t")
       expect(snapshot[:remaining_guesses]).to eq(6)
+      expect(snapshot[:word_display]).to eq("t _ _ t")
     end
 
     xit "returns :incorrect and decreases remaining guesses when guess is wrong" do
@@ -35,6 +37,7 @@ RSpec.describe GameState do
       snapshot = @state.get_game_state
       expect(snapshot[:incorrect_guesses]).to include("x")
       expect(snapshot[:remaining_guesses]).to eq(5)
+      expect(snapshot[:word_display]).to eq("_ _ _ _")
     end
 
     xit "returns :duplicate when the same letter is guessed again" do
@@ -62,6 +65,7 @@ RSpec.describe GameState do
       expect(snapshot[:correct_guesses]).to include("t")
       expect(snapshot[:incorrect_guesses]).to include("x")
       expect(snapshot[:remaining_guesses]).to eq(5)
+      expect(snapshot[:word_display]).to eq("t _ _ t")
     end
   end
 
@@ -73,6 +77,7 @@ RSpec.describe GameState do
       state.guess_letter("t")
       snapshot = state.get_game_state
       expect(snapshot[:status]).to eq(:win)
+      expect(snapshot[:word_display]).to eq("c a t")
     end
 
     xit "reports loss when wrong guesses equal limit" do
@@ -82,6 +87,7 @@ RSpec.describe GameState do
       state.guess_letter("z")
       snapshot = state.get_game_state
       expect(snapshot[:status]).to eq(:loss)
+      expect(snapshot[:word_display]).to eq("_ _ _")
     end
   end
 end

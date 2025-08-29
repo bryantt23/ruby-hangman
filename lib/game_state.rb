@@ -10,6 +10,7 @@ class GameState
       updated_at: now,
       word_display_data_structure: Array.new(word.length, "_"),
       word_display: Array.new(word.length, "_").join(" "),
+      status: :in_progress,
     }
   end
 
@@ -18,7 +19,9 @@ class GameState
   end
 
   def guess_letter(letter)
-    if @game_state[:word_display].include?(letter)
+    if !(letter =~ /[A-Za-z]/)
+      :invalid
+    elsif @game_state[:word_display].include?(letter) || @game_state[:incorrect_guesses].include?(letter)
       :duplicate
     elsif @game_state[:word].include?(letter)
       @game_state[:correct_guesses] << letter
@@ -29,7 +32,19 @@ class GameState
 
       @game_state[:word_display] = @game_state[:word_display_data_structure].join(" ")
 
+      if !@game_state[:word_display_data_structure].include?("_")
+        @game_state[:status] = :win
+      end
+
       :correct
+    else
+      @game_state[:incorrect_guesses] << letter
+
+      @game_state[:remaining_guesses] -= 1
+      if @game_state[:remaining_guesses] == 0
+        @game_state[:status] = :loss
+      end
+      :incorrect
     end
   end
 

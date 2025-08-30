@@ -34,7 +34,11 @@ class GameEngine
     while game_state.get_game_state[:status] == :in_progress
       puts @view.show_game_state(game_state.get_game_state)
       puts @view.show_guess_letter_or_save
-      input = gets.chomp
+      input = gets.chomp.downcase
+      if input == "save"
+        SaveManager.save_game(game_state.get_game_state, Time.now.strftime("%Y-%m-%d-%H-%M-%S"))
+        return
+      end
       guess_result = game_state.guess_letter(input)
       @view.show_guess_feedback(guess_result)
       puts "The game state is #{game_state.get_game_state}"

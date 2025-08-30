@@ -9,8 +9,13 @@ class SaveManager
   end
 
   def self.load_game(file)
-    file = File.read(file)
-    parsed_data = JSON.parse(file, symbolize_names: true)
-    parsed_data
+    content = File.read(file)
+    data = JSON.parse(content, symbolize_names: true)
+
+    # Normalize status back to a symbol
+    if data[:status].is_a?(String)
+      data[:status] = data[:status].to_sym
+    end
+    data
   end
 end

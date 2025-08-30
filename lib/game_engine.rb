@@ -77,7 +77,7 @@ class GameEngine
         return
       end
       guess_result = game_state.guess_letter(input)
-      @view.show_guess_feedback(guess_result)
+      puts @view.show_guess_feedback(guess_result)
       puts "The game state is #{game_state.get_game_state}"
     end
 

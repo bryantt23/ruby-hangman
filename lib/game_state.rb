@@ -69,7 +69,4 @@ class GameState
     end
     indices
   end
-
-  def get_word_display
-  end
 end

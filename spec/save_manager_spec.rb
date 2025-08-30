@@ -2,7 +2,7 @@ require "save_manager"
 require "json"
 
 RSpec.describe SaveManager do
-  let(:save_file) { "test_save.json" }
+  let(:save_file) { "saves/test_save.json" }
   let(:game_state_hash) do
     {
       word: "test",

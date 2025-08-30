@@ -20,15 +20,25 @@ class GameEngine
   def start
     keep_playing = true
     while keep_playing
+      # welcome
       play_game
       keep_playing = play_again?
     end
   end
 
+  def welcome
+    puts @view.show_welcome
+    filenames = Dir.entries("saves")
+    # saved_games=
+    #
+    #
+    #
+    puts @view.show_new_game_saved_games()
+  end
+
   def play_game
     @word = get_word
     puts "The word is #{@word}"
-    puts @view.show_welcome
     game_state = GameState.new(@word)
 
     while game_state.get_game_state[:status] == :in_progress
@@ -36,7 +46,10 @@ class GameEngine
       puts @view.show_guess_letter_or_save
       input = gets.chomp.downcase
       if input == "save"
-        SaveManager.save_game(game_state.get_game_state, Time.now.strftime("%Y-%m-%d-%H-%M-%S"))
+        save_dir = File.join(__dir__, "..", "saves")
+        Dir.mkdir(save_dir) unless Dir.exist?(save_dir)
+        file_path = File.join(save_dir, "#{Time.now.strftime("%Y-%m-%d-%H-%M-%S")}.json")
+        SaveManager.save_game(game_state.get_game_state, file_path)
         return
       end
       guess_result = game_state.guess_letter(input)

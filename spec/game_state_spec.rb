@@ -109,4 +109,29 @@ RSpec.describe GameState do
       expect(snapshot[:word_display]).to eq("_ _ _")
     end
   end
+  describe ".from_saved_state" do
+    it "restores a GameState from a saved hash" do
+      saved = {
+        word: "test",
+        remaining_guesses: 4,
+        correct_guesses: ["t", "e"],
+        incorrect_guesses: ["x", "y"],
+        created_at: Time.now - 60,
+        updated_at: Time.now,
+        word_display_data_structure: ["t", "e", "_", "t"],
+        word_display: "t e _ t",
+        status: :in_progress,
+      }
+
+      state = GameState.from_saved_state(saved)
+      snapshot = state.get_game_state
+
+      expect(snapshot[:word]).to eq("test")
+      expect(snapshot[:remaining_guesses]).to eq(4)
+      expect(snapshot[:correct_guesses]).to eq(["t", "e"])
+      expect(snapshot[:incorrect_guesses]).to eq(["x", "y"])
+      expect(snapshot[:word_display]).to eq("t e _ t")
+      expect(snapshot[:status]).to eq(:in_progress)
+    end
+  end
 end

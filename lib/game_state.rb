@@ -1,9 +1,13 @@
 class GameState
+  REMAINING_GUESSES = 6
+
+  attr_accessor :game_state
+
   def initialize(word)
     now = Time.now
     @game_state = {
       word: word,
-      remaining_guesses: 6,
+      remaining_guesses: REMAINING_GUESSES,
       correct_guesses: [],
       incorrect_guesses: [],
       created_at: now,
@@ -46,6 +50,12 @@ class GameState
       end
       :incorrect
     end
+  end
+
+  def self.from_saved_state(state)
+    continued_game = GameState.new(state[:word])
+    continued_game.game_state = state
+    continued_game
   end
 
   private

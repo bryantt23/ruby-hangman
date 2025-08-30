@@ -56,24 +56,21 @@ RSpec.describe View do
 
     it "returns new game option plus one saved game" do
       saves = [
-        { id: 1, created_at: "2025-08-27", updated_at: "2025-08-28" },
+        "2025-08-27",
       ]
 
       output = @view.show_new_game_saved_games(saves)
       expect(output).to include("(N)ew game or choose a saved game")
-      expect(output).to include("1. Created: 2025-08-27, Last saved: 2025-08-28")
+      expect(output).to include("1. 2025-08-27")
     end
 
     it "returns a list of saved games when provided" do
-      saves = [
-        { id: 1, created_at: "2025-08-27", updated_at: "2025-08-28" },
-        { id: 2, created_at: "2025-08-26", updated_at: "2025-08-27" },
-      ]
+      saves = ["2025-08-27", "2025-08-26"]
 
       output = @view.show_new_game_saved_games(saves)
       expect(output).to include("(N)ew game or choose a saved game")
-      expect(output).to include("1. Created: 2025-08-27, Last saved: 2025-08-28")
-      expect(output).to include("2. Created: 2025-08-26, Last saved: 2025-08-27")
+      expect(output).to include("1. 2025-08-27")
+      expect(output).to include("2. 2025-08-26")
     end
   end
   describe "#show_game_state" do

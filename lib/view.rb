@@ -31,8 +31,8 @@ class View
       "(N)ew game (no saved games available)"
     else
       lines = ["(N)ew game or choose a saved game"]
-      saved_games.to_a.each_with_index do |value, index|
-        lines.push("#{index + 1}. Created: #{value[:created_at]}, Last saved: #{value[:updated_at]}")
+      saved_games.each_with_index do |value, index|
+        lines.push("#{index + 1}. #{value}")
       end
       lines.join("\n")
     end

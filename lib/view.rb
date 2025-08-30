@@ -28,11 +28,11 @@ class View
 
   def show_new_game_saved_games(saved_games)
     if saved_games.empty?
-      "(N)ew game (no saved games available)"
+      "(N)ew game (no saved games available) or (X) to exit"
     else
-      lines = ["(N)ew game or choose a saved game"]
-      saved_games.each_with_index do |value, index|
-        lines.push("#{index + 1}. #{value}")
+      lines = ["(N)ew game or choose a saved game, or (X) to exit"]
+      saved_games.each_with_index do |filename, index|
+        lines << "#{index + 1}. #{filename}"
       end
       lines.join("\n")
     end

@@ -48,19 +48,16 @@ RSpec.describe View do
       expect(@view.show_guess_feedback(:duplicate)).to eq("You already guessed that letter.")
     end
   end
-
   describe "#show_new_game_saved_games" do
     it "returns a prompt when there are no saved games" do
-      expect(@view.show_new_game_saved_games([])).to eq("(N)ew game (no saved games available)")
+      expect(@view.show_new_game_saved_games([])).to eq("(N)ew game (no saved games available) or (X) to exit")
     end
 
     it "returns new game option plus one saved game" do
-      saves = [
-        "2025-08-27",
-      ]
+      saves = ["2025-08-27"]
 
       output = @view.show_new_game_saved_games(saves)
-      expect(output).to include("(N)ew game or choose a saved game")
+      expect(output).to include("(N)ew game or choose a saved game, or (X) to exit")
       expect(output).to include("1. 2025-08-27")
     end
 
@@ -68,11 +65,12 @@ RSpec.describe View do
       saves = ["2025-08-27", "2025-08-26"]
 
       output = @view.show_new_game_saved_games(saves)
-      expect(output).to include("(N)ew game or choose a saved game")
+      expect(output).to include("(N)ew game or choose a saved game, or (X) to exit")
       expect(output).to include("1. 2025-08-27")
       expect(output).to include("2. 2025-08-26")
     end
   end
+
   describe "#show_game_state" do
     it "displays the word with blanks and letters" do
       state = {

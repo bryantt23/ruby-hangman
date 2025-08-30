@@ -20,12 +20,7 @@ class GameEngine
   end
 
   def start
-    keep_playing = true
-    while keep_playing
-      welcome
-      # play_game
-      keep_playing = play_again?
-    end
+    welcome
   end
 
   def valid_selection?(input, filenames)
@@ -36,13 +31,15 @@ class GameEngine
 
   def welcome
     puts @view.show_welcome
-
     loop do
       filenames = Dir.children(SAVE_DIR)
       puts @view.show_new_game_saved_games(filenames)
       input = gets.chomp
       if input.downcase == "n"
         play_game(nil)
+      elsif input.downcase == "x"
+        puts "Goodbye!"
+        exit
       else
         unless valid_selection?(input, filenames)
           puts @view.invalid_selection
@@ -64,8 +61,6 @@ class GameEngine
     end
     puts "The word is #{game_state.get_game_state[:word]}"
 
-    puts "game state is #{game_state.get_game_state}"
-
     while game_state.get_game_state[:status] == :in_progress
       puts @view.show_game_state(game_state.get_game_state)
       puts @view.show_guess_letter_or_save
@@ -78,7 +73,6 @@ class GameEngine
       end
       guess_result = game_state.guess_letter(input)
       puts @view.show_guess_feedback(guess_result)
-      puts "The game state is #{game_state.get_game_state}"
     end
 
     puts @view.show_win_loss(game_state.get_game_state[:status])
@@ -86,20 +80,6 @@ class GameEngine
       file_path = File.join(SAVE_DIR, @file_name)
       File.delete(file_path) if File.exist?(file_path)
       @file_name = nil
-    end
-  end
-
-  def play_again?
-    puts @view.show_replay_prompt
-    while user_input = gets.chomp
-      case user_input
-      when "X", "x"
-        return false
-      when ""
-        return true
-      else
-        puts @view.show_replay_prompt
-      end
     end
   end
 end

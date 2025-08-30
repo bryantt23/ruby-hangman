@@ -5,9 +5,11 @@ require_relative "save_manager"
 class GameEngine
   MIN_WORD_LENGTH = 1
   MAX_WORD_LENGTH = 2
+  SAVE_DIR = File.join(__dir__, "..", "saves")
 
   def initialize
     @view = View.new
+    @file_name = nil
   end
 
   def get_word
@@ -20,35 +22,57 @@ class GameEngine
   def start
     keep_playing = true
     while keep_playing
-      # welcome
-      play_game
+      welcome
+      # play_game
       keep_playing = play_again?
     end
   end
 
-  def welcome
-    puts @view.show_welcome
-    filenames = Dir.entries("saves")
-    # saved_games=
-    #
-    #
-    #
-    puts @view.show_new_game_saved_games()
+  def valid_selection?(input, filenames)
+    return false unless input.match?(/^\d+$/)   # digits only
+    index = input.to_i
+    index >= 1 && index <= filenames.length
   end
 
-  def play_game
-    @word = get_word
-    puts "The word is #{@word}"
-    game_state = GameState.new(@word)
+  def welcome
+    puts @view.show_welcome
+
+    loop do
+      filenames = Dir.children(SAVE_DIR)
+      puts @view.show_new_game_saved_games(filenames)
+      input = gets.chomp
+      if input.downcase == "n"
+        play_game(nil)
+      else
+        unless valid_selection?(input, filenames)
+          puts @view.invalid_selection
+        else
+          file_to_load = filenames[input.to_i - 1]
+          game_state_hash = SaveManager.load_game("#{SAVE_DIR}/#{file_to_load}")
+          game_state = GameState.from_saved_state(game_state_hash)
+          @file_name = file_to_load
+          play_game(game_state)
+        end
+      end
+    end
+  end
+
+  def play_game(game_state)
+    if game_state == nil
+      @word = get_word
+      game_state = GameState.new(@word)
+    end
+    puts "The word is #{game_state.get_game_state[:word]}"
+
+    puts "game state is #{game_state.get_game_state}"
 
     while game_state.get_game_state[:status] == :in_progress
       puts @view.show_game_state(game_state.get_game_state)
       puts @view.show_guess_letter_or_save
       input = gets.chomp.downcase
       if input == "save"
-        save_dir = File.join(__dir__, "..", "saves")
-        Dir.mkdir(save_dir) unless Dir.exist?(save_dir)
-        file_path = File.join(save_dir, "#{Time.now.strftime("%Y-%m-%d-%H-%M-%S")}.json")
+        Dir.mkdir(SAVE_DIR) unless Dir.exist?(SAVE_DIR)
+        file_path = File.join(SAVE_DIR, "#{Time.now.strftime("%Y-%m-%d-%H-%M-%S")}.json")
         SaveManager.save_game(game_state.get_game_state, file_path)
         return
       end
@@ -58,6 +82,11 @@ class GameEngine
     end
 
     puts @view.show_win_loss(game_state.get_game_state[:status])
+    if @file_name
+      file_path = File.join(SAVE_DIR, @file_name)
+      File.delete(file_path) if File.exist?(file_path)
+      @file_name = nil
+    end
   end
 
   def play_again?

@@ -41,4 +41,8 @@ class View
   def show_game_state(state)
     ["Guesses remaining: #{state[:remaining_guesses]}", "Current word: #{state[:word_display]}", "Incorrect guesses: #{state[:incorrect_guesses].sort.join(", ")}"].join("\n")
   end
+
+  def invalid_selection
+    "Invalid selection"
+  end
 end
